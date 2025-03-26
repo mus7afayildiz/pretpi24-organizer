@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/', function () {
     return view('welcome');
 });
+ 
+Route::get('/categories/edit', function () {
+    return view('welcome');
+});
+
+Route::resource('categories', \App\Http\Controllers\CategoryController::class);
+Route::resource('notes', \App\Http\Controllers\NoteController::class);
 
 Route::get('/test', function () {
     $heureServeur = now();
