@@ -14,13 +14,14 @@
                         <thead>
                             <tr>
                                 <th>Notes</th>
-                                <th></th>
+                                <th>Text</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($notes as $note)
                                 <tr>
-                                    <td>{{ $note->titre }}</td>
+                                    <td>{{ $note->title }}</td>
+                                    <td>{{ $note->content_markdown }}</td>
                                     <td>
                                         <a href="{{ route('notes.edit', $note) }}">Edit</a>
                                         <form method="POST" action="{{ route('notes.destroy', $note) }}"> 

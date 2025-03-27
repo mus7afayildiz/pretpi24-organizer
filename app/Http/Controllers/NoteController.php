@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -34,10 +35,12 @@ class NoteController extends Controller
     {
         //
         Note::create([
-            'titre' => $request->input('titre'),
+            'title' => $request->input('title'),
+            'content_markdown' => $request->input('content_markdown'),
+            'id' => $request->input('id')
         ]);
  
-        return redirect()->route('note.index');
+        return redirect()->route('notes.index');
     }
 
     /**
@@ -64,7 +67,8 @@ class NoteController extends Controller
     {
         //
         $note->update([
-            'titre' => $request->input('titre'),
+            'title' => $request->input('title'),
+            'content_markdown' => $request->input('content_markdown'),
         ]);
 
         return redirect()->route('notes.index'); 

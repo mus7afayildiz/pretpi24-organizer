@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
     // Table des fichiers attachés
-    Schema::create('attachements', function (Blueprint $table) {
-        $table->id();
-        $table->string('nom_fichier');
-        $table->string('chemin');
-        $table->string('type_mime');
-        $table->foreignId('note_id')->constrained()->onDelete('cascade');
+    Schema::create('t_attachment', function (Blueprint $table) {
+        $table->id('attachment_id');
+        $table->string('filename');
+        $table->string('path');
+        $table->string('type');
+        $table->foreignIdFor(\App\Models\Note::class, 'note_id')->constrained('t_note')->onDelete('cascade');
     });     
     }
         
 
     public function down(): void
     {
-        Schema::dropIfExists('attachments');
+        Schema::dropIfExists('t_attachment');
     }
 };

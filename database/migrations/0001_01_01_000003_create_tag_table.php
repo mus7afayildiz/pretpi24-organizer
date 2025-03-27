@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Table des tags
-        Schema::create('tags', function (Blueprint $table) {
-            $table->id();
-            $table->string('nom')->unique();
-            $table->index('nom');
+        // Table des tag
+        Schema::create('t_tag', function (Blueprint $table) {
+            $table->id('tag_id');
+            $table->string('name')->unique();
+            $table->index('name');
         }); 
     }
         
 
     public function down(): void
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('t_tag');
     }
 };
