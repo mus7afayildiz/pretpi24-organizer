@@ -11,13 +11,24 @@ class Note extends Model
     protected $table = 't_note';
     protected $primaryKey = 'note_id';
     
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
+    // public function tags()
+    // {
+    //     return $this->belongsToMany(Tag::class);
+    // }
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'id');
+    }
+
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'add', 'note_id', 'tag_id');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'note_id');
     }
 }

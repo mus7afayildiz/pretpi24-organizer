@@ -19,6 +19,18 @@ class NoteController extends Controller
         return view('notes.index', compact('notes')); 
     }
 
+    public function adding()
+    {
+        $notes = Note::with(['tags', 'attachments'])->get();
+
+        return response()->json($notes);
+    }
+    public function showIndexPage()
+    {
+        $notes = Note::with(['tags', 'attachments'])->get();
+        return view('notes.index', compact('notes'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -33,14 +45,44 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content_markdown' => 'required|string',
+            'id' => 'required|exists:users,id',
+            'tags' => 'array',
+            'tags.*' => 'exists:t_tag,tag_id',
+            'attachments' => 'array',
+            'attachments.*.filename' => 'required|string|max:255',
+            'attachments.*.path' => 'required|string|max:255',
+            'attachments.*.type' => 'required|string|max:255'
+        ]);
+
         //
         Note::create([
             'title' => $request->input('title'),
             'content_markdown' => $request->input('content_markdown'),
             'id' => $request->input('id')
         ]);
+
+        // Associate tags
+        if ($request->has('tags')) {
+            $note->tags()->sync($request->tags);
+        }
+
+        // Save attachments
+        if ($request->has('attachments')) {
+            foreach ($request->attachments as $attachment) {
+                Attachment::create([
+                    'filename' => $attachment['filename'],
+                    'path' => $attachment['path'],
+                    'type' => $attachment['type'],
+                    'note_id' => $note->note_id
+                ]);
+            }
+        }
  
-        return redirect()->route('notes.index');
+        //return redirect()->route('notes.index');
+        return response()->json(['message' => 'Note created successfully', 'note' => $note], 201);
     }
 
     /**
@@ -69,6 +111,7 @@ class NoteController extends Controller
         $note->update([
             'title' => $request->input('title'),
             'content_markdown' => $request->input('content_markdown'),
+            'id' => $request->input('id')
         ]);
 
         return redirect()->route('notes.index'); 
