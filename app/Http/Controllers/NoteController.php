@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,12 +12,31 @@ class NoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $notes = Note::all(); 
- 
-        return view('notes.index', compact('notes')); 
+        $query = Note::query();
+
+        // Etikete göre filtreleme
+        if ($request->has('tag') && $request->tag != '') {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('name', $request->tag);
+            });
+        }
+
+        // **Anahtar kelime ile arama**
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                ->orWhere('content_markdown', 'like', "%{$searchTerm}%");
+            });
+        }
+    
+        // Notları ve etiketleri çek
+        $notes = $query->with('tags', 'attachments')->get();
+        $tags = Tag::all(); // Etiketleri al
+    
+        return view('notes.index', compact('notes', 'tags'));
     }
 
     public function adding()
@@ -50,15 +70,15 @@ class NoteController extends Controller
             'content_markdown' => 'required|string',
             'id' => 'required|exists:users,id',
             'tags' => 'array',
-            'tags.*' => 'exists:t_tag,tag_id',
+            'tags.*' => 'exists:tags,tag_id',
             'attachments' => 'array',
             'attachments.*.filename' => 'required|string|max:255',
             'attachments.*.path' => 'required|string|max:255',
             'attachments.*.type' => 'required|string|max:255'
         ]);
 
-        //
-        Note::create([
+        // Create new note
+        $note = Note::create([
             'title' => $request->input('title'),
             'content_markdown' => $request->input('content_markdown'),
             'id' => $request->input('id')
@@ -72,17 +92,15 @@ class NoteController extends Controller
         // Save attachments
         if ($request->has('attachments')) {
             foreach ($request->attachments as $attachment) {
-                Attachment::create([
+                $note->attachments()->create([
                     'filename' => $attachment['filename'],
                     'path' => $attachment['path'],
                     'type' => $attachment['type'],
-                    'note_id' => $note->note_id
                 ]);
             }
         }
  
-        //return redirect()->route('notes.index');
-        return response()->json(['message' => 'Note created successfully', 'note' => $note], 201);
+        return redirect()->route('notes.index');
     }
 
     /**

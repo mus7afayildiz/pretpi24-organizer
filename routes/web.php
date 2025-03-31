@@ -3,11 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\NoteController;
 
 Route::get('/', function () {
     return view('welcome');
 });
- 
+
+Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
+
 Route::get('/categories/edit', function () {
     return view('welcome');
 });
