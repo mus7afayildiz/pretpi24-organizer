@@ -1,0 +1,50 @@
+name: Deploy Laravel to FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo, bcmath
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+      
+      - name: Generate application key
+        run: php artisan key:generate
+      
+      - name: Deploy files to FTP server
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: 211
+          local-dir: ./C:/Users/pj28jjj/Desktop/pretpi24-organizer/public/index.php
+          server-dir: /ftp://organizer-ftp-1@organizer.w3.pm2etml.ch:211/pretpi24-organizer/public/index.php/
+          exclude: |
+            .git*
+            .env
+            node_modules/
+            storage/
+            vendor/
+
+      - name: Run migrations
+        run: |
+          php artisan migrate --force
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_DATABASE: ${{ secrets.DB_NAME }}
+          DB_USERNAME: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASS }}
