@@ -30,10 +30,8 @@ jobs:
           host: ${{ secrets.FTP_HOST }}
           user: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          port: 211
           localDir: ./
           remoteDir: /public_html/
-          exclude: ".git*, .env, node_modules/, storage/, vendor/"
 
       - name: Run migrations
         run: |
