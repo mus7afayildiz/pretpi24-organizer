@@ -22,23 +22,18 @@ jobs:
         run: composer install --no-dev --prefer-dist --optimize-autoloader
       
       - name: Generate application key
-        run: php artisan key:generate
+        run: php artisan key:generate --force
       
       - name: Deploy files to FTP server
         uses: sebastianpopp/ftp-action@v2.0.0
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
+          host: ${{ secrets.FTP_HOST }}
+          user: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           port: 211
-          local-dir: ./
-          server-dir: ./public/index.php/
-          exclude: |
-            .git*
-            .env
-            node_modules/
-            storage/
-            vendor/
+          localDir: ./
+          remoteDir: /public_html/
+          exclude: ".git*, .env, node_modules/, storage/, vendor/"
 
       - name: Run migrations
         run: |
