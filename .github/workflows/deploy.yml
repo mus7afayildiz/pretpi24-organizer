@@ -1,4 +1,4 @@
-name: Deploy Laravel via SSH
+name: Deploy Laravel to Server
 
 on:
   push:
@@ -24,29 +24,26 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate --force
       
-      - name: Deploy files via SSH
+      - name: Deploy via SCP
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: organizer.w3.pm2etml.ch
-          username: mustafa-ssh
-          password: 5bZprPw3CYN15mrKHU4B
+          host: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
           port: 222
           source: "./"
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
           strip_components: 1
+          overwrite: true
+          rm: true
+          tar_tmp_path: "/tmp"
+          command_timeout: 10m
 
-      - name: Run migrations via SSH
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: organizer.w3.pm2etml.ch
-          username: mustafa-ssh
-          password: 5bZprPw3CYN15mrKHU4B
-          port: 222
-          script: |
-            cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
-            php artisan migrate --force
+      - name: Run migrations
+        run: |
+          php artisan migrate --force
         env:
-          DB_HOST: 127.0.0.1
-          DB_DATABASE: organizer
-          DB_USERNAME: orguser
-          DB_PASSWORD: tmGgkvvrmz2PXU7a7VfV
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_DATABASE: ${{ secrets.DB_NAME }}
+          DB_USERNAME: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASS }}
