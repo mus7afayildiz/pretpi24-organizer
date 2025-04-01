@@ -1,4 +1,4 @@
-name: Deploy Laravel to Server
+name: Deploy to Server
 
 on:
   push:
@@ -8,36 +8,34 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, pdo, bcmath
-
-      - name: Install Composer dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-      - name: Generate application key
-        run: php artisan key:generate --force
 
       - name: Deploy files to server using SCP
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: organizer.w3.pm2etml.ch
-          username: mustafa-ssh
-          password: 5bZprPw3CYN15mrKHU4B
-          port: 222
+          host: ${{ secrets.SCP_HOST }}
+          username: ${{ secrets.SCP_USER }}
+          key: ${{ secrets.SCP_PRIVATE_KEY }}
+          port: ${{ secrets.SCP_PORT }}
           source: "./"
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
+          strip_components: 1
+          overwrite: true
+          rm: true
+          command_timeout: 30m
 
-      - name: Run migrations
-        run: php artisan migrate --force
-        env:
-          DB_HOST: 127.0.0.1
-          DB_DATABASE: organizer
-          DB_USERNAME: orguser
-          DB_PASSWORD: tmGgkvvrmz2PXU7a7VfV
+      - name: Set Correct Permissions & Restart Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SCP_HOST }}
+          username: ${{ secrets.SCP_USER }}
+          key: ${{ secrets.SCP_PRIVATE_KEY }}
+          port: ${{ secrets.SCP_PORT }}
+          script: |
+            sudo chown -R $USER:$USER htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
+            sudo chmod -R 755 htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
+            sudo tar -xzf /tmp/tXnqiYwTBn.tar.gz -C htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
+            sudo systemctl restart apache2 || sudo systemctl restart nginx
