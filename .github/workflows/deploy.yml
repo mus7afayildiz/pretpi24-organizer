@@ -25,14 +25,14 @@ jobs:
         run: php artisan key:generate
       
       - name: Deploy files to FTP server
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           port: 211
-          local-dir: ./C:/Users/pj28jjj/Desktop/pretpi24-organizer/public/index.php
-          server-dir: /ftp://organizer-ftp-1@organizer.w3.pm2etml.ch:211/pretpi24-organizer/public/index.php/
+          local-dir: ./
+          server-dir: /public_html/
           exclude: |
             .git*
             .env
