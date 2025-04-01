@@ -27,17 +27,17 @@ jobs:
       - name: Deploy files to server using SCP
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SCP_HOST }}
-          username: ${{ secrets.SCP_USER }}
-          password: ${{ secrets.SCP_PASS }}
-          port: ${{ secrets.SCP_PORT }}
+          host: organizer.w3.pm2etml.ch
+          username: mustafa-ssh
+          password: 5bZprPw3CYN15mrKHU4B
+          port: 222
           source: "./"
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
 
       - name: Run migrations
         run: php artisan migrate --force
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_DATABASE: ${{ secrets.DB_NAME }}
-          DB_USERNAME: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASS }}
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: organizer
+          DB_USERNAME: orguser
+          DB_PASSWORD: tmGgkvvrmz2PXU7a7VfV
