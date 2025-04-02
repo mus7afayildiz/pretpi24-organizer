@@ -18,24 +18,25 @@ return new class extends Migration
             $table->text('content_markdown');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->foreignIdFor(\App\Models\User::class,'id')->constrained('users')->onDelete('cascade');
+            $table->foreignIdFor(\App\Models\User::class,'user_id')->constrained('users')->onDelete('cascade');
             $table->index('title');
             $table->fullText('content_markdown');
         });
 
         // Table pivot Note <-> Tag
-        Schema::create('add', function (Blueprint $table) {
+        Schema::create('note_tag', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(\App\Models\Note::class, 'note_id')->constrained('t_note')->onDelete('cascade');
             $table->foreignIdFor(\App\Models\Tag::class, 'tag_id')->constrained('t_tag')->onDelete('cascade');
-            // Clé primaire composite
-            $table->primary(['note_id', 'tag_id']);
+            $table->timestamps();
         });
     }
         
 
     public function down(): void
     {
+        Schema::dropIfExists('note_tag');
+        Schema::dropIfExists('t_attachment');
         Schema::dropIfExists('t_note');
-        Schema::dropIfExists('add');
     }
 };

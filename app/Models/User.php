@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
 
      protected $table = 'users';
-     protected $primaryKey = 'id';
+     protected $primaryKey = 'user_id';
 
     protected $fillable = [
         'name',
@@ -54,6 +54,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function notes()
     {
-        return $this->hasMany(Note::class, 'id');
+        return $this->hasMany(Note::class, 'user_id');
     }
 }

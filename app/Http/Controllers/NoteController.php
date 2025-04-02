@@ -16,14 +16,14 @@ class NoteController extends Controller
     {
         $query = Note::query();
 
-        // Etikete göre filtreleme
+        // Filtrer par tag
         if ($request->has('tag') && $request->tag != '') {
             $query->whereHas('tags', function ($q) use ($request) {
                 $q->where('name', $request->tag);
             });
         }
 
-        // **Anahtar kelime ile arama**
+      // Recherche par mot-clé
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
             $query->where(function ($q) use ($searchTerm) {
@@ -32,19 +32,13 @@ class NoteController extends Controller
             });
         }
     
-        // Notları ve etiketleri çek
+        // Récupérer des notes et des balises
         $notes = $query->with('tags', 'attachments')->get();
-        $tags = Tag::all(); // Etiketleri al
+        $tags = Tag::all(); // Obtenir des étiquettes
     
         return view('notes.index', compact('notes', 'tags'));
     }
 
-    public function adding()
-    {
-        $notes = Note::with(['tags', 'attachments'])->get();
-
-        return response()->json($notes);
-    }
     public function showIndexPage()
     {
         $notes = Note::with(['tags', 'attachments'])->get();
@@ -65,29 +59,32 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content_markdown' => 'required|string',
-            'id' => 'required|exists:users,id',
-            'tags' => 'array',
-            'tags.*' => 'exists:tags,tag_id',
-            'attachments' => 'array',
-            'attachments.*.filename' => 'required|string|max:255',
-            'attachments.*.path' => 'required|string|max:255',
-            'attachments.*.type' => 'required|string|max:255'
-        ]);
+        // Validation
+        // $request->validate([
+        //     'title' => 'required|string|max:255',
+        //     'content_markdown' => 'required|string',
+        //     'tags' => 'array',
+        //     'tags.*' => 'exists:t_tag,tag_id',
+        //     'attachments' => 'array',
+        //     'attachments.*.filename' => 'required|string|max:255',
+        //     'attachments.*.path' => 'required|string|max:255',
+        //     'attachments.*.type' => 'required|string|max:255'
+        // ]);
 
-        // Create new note
+        // Create note
         $note = Note::create([
-            'title' => $request->input('title'),
-            'content_markdown' => $request->input('content_markdown'),
-            'id' => $request->input('id')
+            'title' => $request->title,
+            'content_markdown' => $request->content_markdown,
+            'user_id' => Auth::id()
         ]);
 
         // Associate tags
         if ($request->has('tags')) {
-            $note->tags()->sync($request->tags);
+            foreach ($request->tags as $tagId) {
+                $note->tags()->attach($tagId); // Ajout de relations avec des balises
+            }
         }
+        
 
         // Save attachments
         if ($request->has('attachments')) {
@@ -96,9 +93,12 @@ class NoteController extends Controller
                     'filename' => $attachment['filename'],
                     'path' => $attachment['path'],
                     'type' => $attachment['type'],
-                ]);
+                ]); 
             }
         }
+
+
+        //dd($note->tags, $note->attachments);
  
         return redirect()->route('notes.index');
     }

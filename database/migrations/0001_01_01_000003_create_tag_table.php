@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id('tag_id');
             $table->string('name')->unique();
             $table->index('name');
+            $table->timestamps();
         }); 
     }
         

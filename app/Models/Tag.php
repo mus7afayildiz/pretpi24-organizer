@@ -15,6 +15,8 @@ class Tag extends Model
 
     public function notes()
     {
-        return $this->belongsToMany(Note::class, 'add', 'tag_id', 'note_id');
+        return $this->belongsToMany(Note::class, 'note_tag', 'tag_id', 'note_id')
+                    ->using(NoteTag::class)
+                    ->withTimestamps();
     }
 }

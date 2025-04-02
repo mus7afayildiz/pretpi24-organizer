@@ -15,6 +15,6 @@ class Attachment extends Model
 
     public function notes()
     {
-        return $this->belongsToMany(Note::class, 'note_id');
+        return $this->belongsToMany(Note::class, 'note_id',);
     }
 }

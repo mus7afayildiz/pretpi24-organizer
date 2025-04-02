@@ -11,7 +11,6 @@
                 <div class="p-6 text-gray-900">
                     <form method="POST" action="{{ route('notes.store') }}"> 
                         @csrf
-
                         <div class="flex items-center gap-4"> 
                             <div> 
                                 <input type="hidden" name="id" id="id" value="{{Auth::user()->id}}">

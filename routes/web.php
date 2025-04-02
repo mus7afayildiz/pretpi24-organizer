@@ -9,14 +9,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
-
 Route::get('/categories/edit', function () {
     return view('welcome');
 });
 
 Route::resource('categories', \App\Http\Controllers\CategoryController::class);
-Route::resource('notes', \App\Http\Controllers\NoteController::class);
 
 Route::get('/test', function () {
     $heureServeur = now();
@@ -33,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('notes', \App\Http\Controllers\NoteController::class);
+    Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
 });
 
 Route::get('/test-mail', function () {
