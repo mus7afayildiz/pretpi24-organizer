@@ -18,7 +18,7 @@ jobs:
         with:
           host: ${{ secrets.SCP_HOST }}
           username: ${{ secrets.SCP_USER }}
-          key: ${{ secrets.SCP_PRIVATE_KEY }}
+          key: ${{ secrets.SCP_PASSWORD  }}
           port: ${{ secrets.SCP_PORT }}
           source: "./"
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
@@ -32,7 +32,7 @@ jobs:
         with:
           host: ${{ secrets.SCP_HOST }}
           username: ${{ secrets.SCP_USER }}
-          key: ${{ secrets.SCP_PRIVATE_KEY }}
+          key: ${{ secrets.SCP_PASSWORD  }}
           port: ${{ secrets.SCP_PORT }}
           script: |
             sudo chown -R $USER:$USER htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
