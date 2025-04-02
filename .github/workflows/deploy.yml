@@ -16,10 +16,10 @@ jobs:
       - name: Deploy files to server using SCP
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SCP_HOST }}
-          username: ${{ secrets.SCP_USER }}
-          key: ${{ secrets.SCP_PASSWORD  }}
-          port: ${{ secrets.SCP_PORT }}
+          host: organizer.w3.pm2etml.ch
+          username: mustafa-ssh
+          key: 5bZprPw3CYN15mrKHU4B
+          port: 222
           source: "./"
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
           strip_components: 1
@@ -30,10 +30,10 @@ jobs:
       - name: Set Correct Permissions & Restart Server
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.SCP_HOST }}
-          username: ${{ secrets.SCP_USER }}
-          key: ${{ secrets.SCP_PASSWORD  }}
-          port: ${{ secrets.SCP_PORT }}
+          host: organizer.w3.pm2etml.ch
+          username: mustafa-ssh
+          key: 5bZprPw3CYN15mrKHU4B
+          port: 222
           script: |
             sudo chown -R $USER:$USER htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
             sudo chmod -R 755 htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
