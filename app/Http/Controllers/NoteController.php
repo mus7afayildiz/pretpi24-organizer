@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use App\Models\Tag;
+use App\Models\Attachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,16 +61,16 @@ class NoteController extends Controller
     public function store(Request $request)
     {
         // Validation
-        // $request->validate([
-        //     'title' => 'required|string|max:255',
-        //     'content_markdown' => 'required|string',
-        //     'tags' => 'array',
-        //     'tags.*' => 'exists:t_tag,tag_id',
-        //     'attachments' => 'array',
-        //     'attachments.*.filename' => 'required|string|max:255',
-        //     'attachments.*.path' => 'required|string|max:255',
-        //     'attachments.*.type' => 'required|string|max:255'
-        // ]);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content_markdown' => 'required|string',
+            'tags' => 'array',
+            'tags.*' => 'exists:t_tag,tag_id',
+            'attachments' => 'array',
+            'attachments.*.filename' => 'required|string|max:255',
+            'attachments.*.path' => 'required|string|max:255',
+            'attachments.*.type' => 'required|string|max:255'
+        ]);
 
         // Create note
         $note = Note::create([
@@ -78,14 +79,34 @@ class NoteController extends Controller
             'user_id' => Auth::id()
         ]);
 
+        $tag = Tag::create([
+            'name' => $request->tag,
+        ]);
+
+
+        //dd($request->all());
+
+        if ($request->has('attachment') && $request->has('path')) {
+            $attachment = Attachment::create([
+                'filename' => $request->input('attachment'),
+                'path' => $request->input('path'),
+                'note_id' => $note->note_id, // Lier l'attachment à la note
+            ]);
+        }
+        
+         
+        
+
+        /*
         // Associate tags
         if ($request->has('tags')) {
             foreach ($request->tags as $tagId) {
                 $note->tags()->attach($tagId); // Ajout de relations avec des balises
             }
-        }
+        }*/
         
 
+        /*
         // Save attachments
         if ($request->has('attachments')) {
             foreach ($request->attachments as $attachment) {
@@ -95,7 +116,7 @@ class NoteController extends Controller
                     'type' => $attachment['type'],
                 ]); 
             }
-        }
+        }*/
 
 
         //dd($note->tags, $note->attachments);

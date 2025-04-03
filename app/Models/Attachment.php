@@ -9,12 +9,12 @@ class Attachment extends Model
 {
     use HasFactory;
     //
-    protected $fillable = ['filename', 'path', 'type', 'note_id'];
+    protected $fillable = ['filename', 'path'];
     protected $table = 't_attachment';
     protected $primaryKey = 'attachment_id';
 
     public function notes()
     {
-        return $this->belongsToMany(Note::class, 'note_id',);
+        return $this->belongsTo(Note::class, 'note_id');
     }
 }

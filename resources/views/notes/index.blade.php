@@ -25,9 +25,9 @@
                         <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-700">
                             <thead>
                                 <tr class="bg-gray-100 dark:bg-gray-700 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Titre</th>
-                                    <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Text</th>
-                                    <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Tag</th>
+                                    <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Titre</th>
+                                    <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Text</th>
+                                    <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Tag</th>
                                     <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Attachement</th>
                                     <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-600"></th>
                                 </tr>
@@ -56,14 +56,15 @@
                                 @foreach($notes as $note)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                         <!-- Title -->
-                                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-900 dark:text-white">{{ $note->title }}</td>
+                                        <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-900 dark:text-white">{{ $note->title }}</td>
                                         <!-- Content -->
-                                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-400">{{ Str::limit($note->content_markdown, 50) }}</td>
+                                        <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-400">{{ Str::limit($note->content_markdown, 50) }}</td>
                                         <!-- Tags -->
-                                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm space-x-2">
+                                        <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm space-x-2">
                                             @foreach($note->tags as $tag)
                                                 <span >{{ $tag->name }}</span>
                                             @endforeach
+                                            {{ $tag->name }}
                                         </td>
                                         <!-- Attachments -->
                                         <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm space-y-1 ">

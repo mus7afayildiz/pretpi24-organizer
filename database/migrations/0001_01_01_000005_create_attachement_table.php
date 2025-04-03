@@ -16,7 +16,6 @@ return new class extends Migration
         $table->id('attachment_id');
         $table->string('filename');
         $table->string('path');
-        $table->string('type');
         $table->foreignIdFor(\App\Models\Note::class, 'note_id')->constrained('t_note')->onDelete('cascade');
     });     
     }
