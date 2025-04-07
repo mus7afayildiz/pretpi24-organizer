@@ -81,51 +81,31 @@ class NoteController extends Controller
         ]);
 
         // Create tag
-        // $tag = Tag::create([
-        //     'name' => $request->tag,
-        // ]);
-        
-        // $noteTag = NoteTag::create([
-        //     'note_id' => 1,
-        //     'tag_id' => 1, 
-        // ]);
+        if ($request->hasFile('attachment')) {
+            $tag = Tag::create([
+                'name' => $request->tag,
+            ]);
+            
+            $noteTag = NoteTag::create([
+                'note_id' => $note->note_id,
+                'tag_id' => $tag->tag_id, 
+            ]);
+        }
         //dd($request->all());
 
         // Create attachment
-        // if ($request->has('attachment') && $request->has('path')) {
-        //     $attachment = Attachment::create([
-        //         'filename' => $request->input('attachment'),
-        //         'path' => $request->input('path'),
-        //         'note_id' => 1, // Lier l'attachment à la note
-        //     ]);
-
-        // }
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filename = $file->getClientOriginalName();
+            $path = $file->store('attachments');
         
+            Attachment::create([
+                'filename' => $filename,
+                'path' => $path,
+                'note_id' => $note->note_id,
+            ]);
+        }
          
-        
-
-        /*
-        // Associate tags
-        if ($request->has('tags')) {
-            foreach ($request->tags as $tagId) {
-                $note->tags()->attach($tagId); // Ajout de relations avec des balises
-            }
-        }*/
-        
-
-        /*
-        // Save attachments
-        if ($request->has('attachments')) {
-            foreach ($request->attachments as $attachment) {
-                $note->attachments()->create([
-                    'filename' => $attachment['filename'],
-                    'path' => $attachment['path'],
-                    'type' => $attachment['type'],
-                ]); 
-            }
-        }*/
-
-
         //dd($note->tags, $note->attachments);
  
         return redirect()->route('notes.index');

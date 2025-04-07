@@ -9,7 +9,7 @@ class Attachment extends Model
 {
     use HasFactory;
     //
-    protected $fillable = ['filename', 'path'];
+    protected $fillable = ['filename', 'path', 'note_id'];
     protected $table = 't_attachment';
     protected $primaryKey = 'attachment_id';
 

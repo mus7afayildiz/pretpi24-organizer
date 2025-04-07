@@ -45,7 +45,7 @@
 
                         <!-- Attachments -->
                         <div>
-                            <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Attachments</label>
+                            <label for="attachment" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Attachments</label>
                             <ul class="mt-2 space-y-2">
                                 @foreach($note->attachments as $attachment)
                                     <li class="flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
@@ -56,7 +56,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                            <input type="file" name="attachments[]" multiple class="mt-2 block w-full text-sm text-gray-700 dark:text-gray-300">
+                            <input type="file" name="attachment" id="attachment" class="mt-2 block w-full text-sm text-gray-700 dark:text-gray-300">
                         </div>
 
                         <!-- Submit Button -->

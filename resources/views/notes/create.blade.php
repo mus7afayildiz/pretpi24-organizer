@@ -9,7 +9,7 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <div class="p-6 text-gray-900 dark:text-gray-100 space-y-6">
-                    <form method="POST" action="{{ route('notes.store') }}"> 
+                    <form method="POST" action="{{ route('notes.store') }}" enctype="multipart/form-data"> 
                         @csrf
                         <input type="hidden" name="id" id="id" value="{{Auth::user()->id}}">
 
@@ -36,12 +36,7 @@
                             <div>
                                 <label for="attachment" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Attachement name:</label>
                             </div>
-                            <input type="file" name="attachments[]" multiple class="mt-2 block w-full text-sm text-gray-700 dark:text-gray-300">
-                            <input type="text" name="attachment" id="attachment" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                            <div>
-                            <label for="path">Path:</label>
-                            </div>
-                            <input type="text" name="path" id="path" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <input type="file" name="attachment" id="attachment" class="mt-2 block w-full text-sm text-gray-700 dark:text-gray-300">
                         </div>
                             
                         <!-- Submit Button -->
