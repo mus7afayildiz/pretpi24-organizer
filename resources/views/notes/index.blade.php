@@ -63,8 +63,7 @@
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm space-x-2">
                                             @foreach($note->tags as $tag)
                                                 <span >{{ $tag->name }}</span>
-                                            @endforeach
-                                            {{ $tag->name }}
+                                            @endforeach  
                                         </td>
                                         <!-- Attachments -->
                                         <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm space-y-1 ">

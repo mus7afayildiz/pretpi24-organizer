@@ -32,11 +32,12 @@
                         <!-- Tags -->
                         <div>
                             <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Tags</label>
+                            <input type="text" name="tag" id="tag" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                             <div id="tag-list" class="flex flex-wrap gap-2 mt-1">
                                 @foreach($note->tags as $tag)
                                     <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">
                                         {{ $tag->name }}
-                                        <button type="button" onclick="removeTag({{ $tag->id }})" class="ml-2 text-red-500">✕</button>
+                                        <button type="button" onclick="removeTag({{ $tag->tag_id }})" class="ml-2 text-red-500">✕</button>
                                     </span>
                                 @endforeach
                             </div>
@@ -51,7 +52,7 @@
                                         <a href="{{ asset($attachment->path) }}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 transition">
                                             {{ $attachment->filename }}
                                         </a>
-                                        <button type="button" onclick="removeAttachment({{ $attachment->id }})" class="ml-2 text-red-500 text-xs">Remove</button>
+                                        <button type="button" onclick="removeAttachment({{ $attachment->attachment_id }})" class="ml-2 text-red-500 text-xs">Remove</button>
                                     </li>
                                 @endforeach
                             </ul>

@@ -6,45 +6,47 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                <div class="p-6 text-gray-900 dark:text-gray-100 space-y-6">
                     <form method="POST" action="{{ route('notes.store') }}"> 
                         @csrf
-                        <div class="flex items-center gap-4"> 
-                            <div> 
-                                <input type="hidden" name="id" id="id" value="{{Auth::user()->id}}">
-                                <div>
-                                    <label for="title">Titre:</label>
-                                </div>
-                                <input type="text" name="title" id="title" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        <input type="hidden" name="id" id="id" value="{{Auth::user()->id}}">
+
+                        <!-- Title -->
+                        <div>   
+                            <label for="title" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Title</label>
+                            <input type="text" name="title" id="title" class="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
+                        </div>
+
+                        <!-- Content -->
+                        <div> 
+                            <label for="content_markdown" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Content</label>
+                            <textarea name="content_markdown" id="content_markdown" id="content_markdown"  class="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-200" rows="4"></textarea>
+                        </div>
+
+                        <!-- Tags -->
+                        <div> 
+                            <label for="tag" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Tag</label>
+                            <input type="text" name="tag" id="tag" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        </div>
+
+                        <!-- Attachments -->
+                        <div> 
+                            <div>
+                                <label for="attachment" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Attachement name:</label>
                             </div>
-                            <div> 
-                                <div>
-                                    <label for="content_markdown">Text:</label>
-                                </div>
-                                <input type="text" name="content_markdown" id="content_markdown" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <input type="file" name="attachments[]" multiple class="mt-2 block w-full text-sm text-gray-700 dark:text-gray-300">
+                            <input type="text" name="attachment" id="attachment" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <div>
+                            <label for="path">Path:</label>
                             </div>
-                            <div> 
-                                <div>
-                                    <label for="tag">Tag:</label>
-                                </div>
-                                <input type="text" name="tag" id="tag" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                            </div>
-                            <div> 
-                                <div>
-                                    <label for="attachment">Attachement name:</label>
-                                </div>
-                                <input type="text" name="attachment" id="attachment" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                <div>
-                                <label for="path">Path:</label>
-                                </div>
-                                <input type="text" name="path" id="path" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                            </div>
+                            <input type="text" name="path" id="path" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        </div>
                             
-                        </div> 
-                        <div class="m-4">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <!-- Submit Button -->
+                        <div class="mt-4">
+                            <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition duration-200">
                                 Save
                             </button>
                         </div>                       

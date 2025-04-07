@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use App\Models\Tag;
+use App\Models\NoteTag;
 use App\Models\Attachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,20 +80,26 @@ class NoteController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        $tag = Tag::create([
-            'name' => $request->tag,
-        ]);
-
-
+        // Create tag
+        // $tag = Tag::create([
+        //     'name' => $request->tag,
+        // ]);
+        
+        // $noteTag = NoteTag::create([
+        //     'note_id' => 1,
+        //     'tag_id' => 1, 
+        // ]);
         //dd($request->all());
 
-        if ($request->has('attachment') && $request->has('path')) {
-            $attachment = Attachment::create([
-                'filename' => $request->input('attachment'),
-                'path' => $request->input('path'),
-                'note_id' => $note->note_id, // Lier l'attachment à la note
-            ]);
-        }
+        // Create attachment
+        // if ($request->has('attachment') && $request->has('path')) {
+        //     $attachment = Attachment::create([
+        //         'filename' => $request->input('attachment'),
+        //         'path' => $request->input('path'),
+        //         'note_id' => 1, // Lier l'attachment à la note
+        //     ]);
+
+        // }
         
          
         
@@ -144,14 +151,27 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note)
+    public function update(Request $request, Note $note, Tag $tag)
     {
-        //
+        // Edit note
         $note->update([
             'title' => $request->input('title'),
             'content_markdown' => $request->input('content_markdown'),
             'id' => $request->input('id')
         ]);
+
+        //dd($request->all());
+
+        if ($request->has('tag')) {
+            $tag = Tag::create([
+                'name' => $request->tag,
+            ]);
+
+            $note_tag = NoteTag::create([
+                'note_id' => $request->note,
+                'tag_id' => $request->tag,
+            ]);
+        }
 
         return redirect()->route('notes.index'); 
     }
