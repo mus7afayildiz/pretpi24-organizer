@@ -66,21 +66,24 @@
                                             @endforeach  
                                         </td>
                                         <!-- Attachments -->
-                                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm space-y-1 ">
+                                        <td class="px-6 py-4 border-b border-r border-gray-300 dark:border-gray-600 text-sm space-y-1 ">
                                             @foreach($note->attachments as $attachment)
                                                 <a href="{{ asset($attachment->path) }}" target="_blank" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 transition">{{ $attachment->filename }}</a><br>
                                             @endforeach
                                         </td>
                                         <!-- Actions -->
-                                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm flex justify-end space-x-2">
-                                            <!-- Edit Button -->
-                                            <a href="{{ route('notes.edit', $note) }}" class="px-3 py-1 bg-yellow-500 text-white text-xs font-medium rounded-lg shadow-sm hover:bg-yellow-600 transition duration-200 ease-in-out">Edit</a>
+                                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-sm  space-x-2 space-y-1">
+                                            <div class="flex justify-end">
+                                                <!-- Edit Button -->
+                                            <a href="{{ route('notes.edit', $note) }}" class="mr-2 px-3 py-1 bg-yellow-500 text-white text-xs font-medium rounded-lg shadow-sm hover:bg-yellow-600 transition duration-200 ease-in-out">Edit</a>
                                             <!-- Delete Form -->
                                             <form method="POST" action="{{ route('notes.destroy', $note) }}"> 
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Are you sure?')" class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-lg shadow-sm hover:bg-red-700 transition duration-200 ease-in-out">Delete</button>
                                             </form>
+                                            </div>
+                                            
                                         </td>
                                     </tr>
                                 @endforeach

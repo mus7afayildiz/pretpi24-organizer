@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\AttachmentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('notes', \App\Http\Controllers\NoteController::class);
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
+    // Tag detach route
+    Route::delete('/tags/{tag}/detach', [TagController::class, 'detach'])->middleware('auth');
+    // Attachment delete route
+    Route::delete('/attachments/{attachment}/delete', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
+
 });
 
 Route::get('/test-mail', function () {

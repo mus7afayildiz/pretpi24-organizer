@@ -4,7 +4,9 @@
             {{ __('Edit Note') }} 
         </h2>
     </x-slot>
- 
+
+    <head><meta name="csrf-token" content="{{ csrf_token() }}"></head>
+
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
@@ -37,7 +39,7 @@
                                 @foreach($note->tags as $tag)
                                     <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">
                                         {{ $tag->name }}
-                                        <button type="button" onclick="removeTag({{ $tag->tag_id }})" class="ml-2 text-red-500">✕</button>
+                                        <button type="button" onclick="removeTag({{ $tag->tag_id }}, {{ $note->id }})" class="ml-2 text-red-500">✕</button>
                                     </span>
                                 @endforeach
                             </div>
@@ -76,19 +78,34 @@
 
 <!-- Javascript for Tag & Attachment Removal -->
 <script>
-    function removeTag(tagId) {
-        if (confirm('Are you sure you want to remove this tag?')) {
-            fetch(`/tags/${tagId}/detach`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
-                .then(response => response.json())
-                .then(data => location.reload());
+    function removeTag(tagId, noteId) {
+        if (confirm('Are you sure you want to remove this tag from the note?')) {
+            fetch(`/tags/${tagId}/detach`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ note_id: noteId })
+            })
+            .then(response => response.json())
+            .then(data => location.reload())
+            .catch(error => alert("Failed to remove tag"));
         }
     }
 
     function removeAttachment(attachmentId) {
-        if (confirm('Are you sure you want to remove this attachment?')) {
-            fetch(`/attachments/${attachmentId}/delete`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
-                .then(response => response.json())
-                .then(data => location.reload());
+    if (confirm('Are you sure you want to remove this attachment?')) {
+        fetch(`/attachments/${attachmentId}/delete`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }
+        })
+        .then(response => response.json())
+        .then(data => location.reload())
+        .catch(error => alert("Failed to remove attachment"));
         }
     }
+
 </script>

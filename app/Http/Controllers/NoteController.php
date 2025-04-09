@@ -81,7 +81,7 @@ class NoteController extends Controller
         ]);
 
         // Create tag
-        if ($request->hasFile('attachment')) {
+        if ($request->has('tag')) {
             $tag = Tag::create([
                 'name' => $request->tag,
             ]);
@@ -137,19 +137,32 @@ class NoteController extends Controller
         $note->update([
             'title' => $request->input('title'),
             'content_markdown' => $request->input('content_markdown'),
-            'id' => $request->input('id')
+            'user_id' => Auth::id()
         ]);
 
         //dd($request->all());
 
         if ($request->has('tag')) {
             $tag = Tag::create([
-                'name' => $request->tag,
+                'name' => $request->input('tag'),
             ]);
 
             $note_tag = NoteTag::create([
-                'note_id' => $request->note,
-                'tag_id' => $request->tag,
+                'note_id' => $note->note_id,
+                'tag_id' => $tag->tag_id,
+            ]);
+        }
+
+        // Create attachment
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filename = $file->getClientOriginalName();
+            $path = $file->store('attachments');
+        
+            Attachment::create([
+                'filename' => $filename,
+                'path' => $path,
+                'note_id' => $note->note_id,
             ]);
         }
 
