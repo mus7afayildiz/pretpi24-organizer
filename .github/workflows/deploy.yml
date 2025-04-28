@@ -32,8 +32,8 @@ jobs:
           username: mustafa-ssh
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
-          source: "./"   # <-- important : le dossier des fichiers de build (vite fait du dossier 'dist' le dossier par défaut)
-          target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
+          source: "./public/build/"   # <-- important : le dossier des fichiers de build (vite fait du dossier 'dist' le dossier par défaut)
+          target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer/build"
           strip_components: 1
           overwrite: true
           command_timeout: 30m
