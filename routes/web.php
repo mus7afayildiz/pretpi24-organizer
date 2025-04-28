@@ -33,10 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('notes', \App\Http\Controllers\NoteController::class);
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
-    // Tag detach route
-    Route::delete('/tags/{tag}/detach', [TagController::class, 'detach'])->middleware('auth');
-    // Attachment delete route
     Route::delete('/attachments/{attachment}/delete', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
+    Route::delete('/attachments/{attachmentId}/delete', [AttachmentController::class, 'removeAttachment']);
+    Route::post('/attachments/{note}/store', [AttachmentController::class, 'store'])->name('attachments.store');
+    Route::delete('/notes/{note}/tag/{tag}', [NoteController::class, 'removeTag'])->name('notes.removeTag');
+    Route::delete('/notes/{note}/tags/{tag}', [NoteController::class, 'removeTagFromNote']);
+    Route::post('/notes/{note}/add-tag', [NoteController::class, 'addTag'])->name('notes.addTag');
+    Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
 
 });
 

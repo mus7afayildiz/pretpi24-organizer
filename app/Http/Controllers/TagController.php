@@ -18,7 +18,7 @@ class TagController extends Controller
     
         $note = Note::findOrFail($noteId);
     
-        // Kullanıcının notu olduğundan emin ol
+        // Assurez-vous que l'utilisateur a une note
         if ($note->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -28,12 +28,30 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag detached successfully', 200]);
     }
 
-        /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Test $test)
+    public function store(Note $note, Tag $tag)
     {
-        //
+        // Créer une balise
+        if ($request->has('tag')) {
+            $tag = Tag::create([
+            'name' => $request->tag,
+        ]);
+        
+        $noteTag = NoteTag::create([
+            'note_id' => $note->note_id,
+            'tag_id' => $tag->tag_id, 
+        ]);
+        }
     }
+
+    /**
+     * Supprimez la ressource spécifiée du stockage.
+     */
+    public function destroy(Tag $tag)
+    {
+        //supprimer la balise
+        $tag->delete();
+        return redirect()->route('notes.index');
+    }
+
 
 }

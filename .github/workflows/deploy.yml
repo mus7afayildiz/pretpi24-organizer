@@ -12,6 +12,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        
+      #TODO vite build!!! (attention) OK!
+      - name: Install dependencies
+        run: npm install
+  
+      - name: Vite Build
+        run: npm run vite:build
 
       - name: Deploy files to server using SCP
         uses: appleboy/scp-action@v0.1.4
@@ -20,12 +27,12 @@ jobs:
           username: mustafa-ssh
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
-          source: "./"
+          source: "./dist/"   # <-- important : le dossier des fichiers de build (vite fait du dossier 'dist' le dossier par défaut)
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer"
           strip_components: 1
           overwrite: true
-          rm: true
           command_timeout: 30m
+
 
       - name: Set Correct Permissions & Restart Server
         uses: appleboy/ssh-action@v0.1.10
@@ -35,6 +42,7 @@ jobs:
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
           script: |
-            cd /htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
+            echo git pull
+            echo cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
             echo php artisan migrate
             echo php artisan optimize:clear

@@ -11,34 +11,90 @@ use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
+
+    // Add tag to note
+    public function addTag(Request $request, Note $note)
+    {
+        // Obtenir tag
+        $tag = Tag::find($request->tag_id);
+
+        if (!$tag) {
+            return back()->with('error', 'Tag not found.');
+        }
+
+        // Association à une note
+        $note->tags()->attach($tag->tag_id);
+
+        // Redirection avec message de réussite
+        return back()->with('success', 'Tag added successfully.');
+    }
+
     /**
-     * Display a listing of the resource.
+     * Supprimer la connexion entre tag et note
+     */
+    public function removeTag(Note $note, Tag $tag)
+    {
+        $note->tags()->detach($tag->tag_id);
+
+        return  back()->with('success', 'Tag deleted successfully.');
+    }
+
+
+    public function removeTagFromNote($noteId, $tagId)
+    {
+        // Notu bul
+        $note = Note::findOrFail($noteId);
+
+        // Tag'ı bul
+        $tag = Tag::findOrFail($tagId);
+
+        // Tag'ı not ile ilişkisinden kaldır
+        $note->tags()->detach($tagId);
+
+        return response()->json(['message' => 'Tag removed successfully.']);
+    }
+
+
+    /**
+     * Afficher une liste de la ressource.
      */
     public function index(Request $request)
     {
-        $query = Note::query();
+        $user = Auth::user();
 
-        // Filtrer par tag
-        if ($request->has('tag') && $request->tag != '') {
-            $query->whereHas('tags', function ($q) use ($request) {
-                $q->where('name', $request->tag);
-            });
-        }
+        $query = Note::with(['tags', 'attachments'])->where('user_id', $user->id);
 
-      // Recherche par mot-clé
-        if ($request->has('search') && $request->search != '') {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', "%{$searchTerm}%")
-                ->orWhere('content_markdown', 'like', "%{$searchTerm}%");
-            });
-        }
+    // Recherche par mot-clé
+    if ($request->has('search') && $request->search != '') {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('title', 'like', "%{$searchTerm}%")
+            ->orWhere('content_markdown', 'like', "%{$searchTerm}%");
+        });
+    }
+
+    // Récupérer des notes et des balises
+    $notes = $query->with('tags', 'attachments')->get();
+    $tags = Tag::all(); // Obtenir des étiquettes
+
+    $notesQuery = Note::with(['tags', 'attachments'])->where('user_id', Auth::id());
+
+    $tags = Tag::all(); // Pour les cases à cocher
     
-        // Récupérer des notes et des balises
-        $notes = $query->with('tags', 'attachments')->get();
-        $tags = Tag::all(); // Obtenir des étiquettes
+    // Obtenir les cases à cocher sous forme de tableau
+    if ($request->has('tags')) {
+        $selectedTags = $request->input('tags', []);
     
-        return view('notes.index', compact('notes', 'tags'));
+        $notesQuery->whereHas('tags', function ($query) use ($selectedTags) {
+            $query->whereIn('name', $selectedTags);
+        });
+    } else {
+        $selectedTags = [];
+    }
+    
+    $notes = $notesQuery->get();
+    
+    return view('notes.index', compact('notes', 'tags', 'selectedTags'));
     }
 
     public function showIndexPage()
@@ -48,7 +104,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Afficher le formulaire de création d'une nouvelle ressource.
      */
     public function create()
     {
@@ -57,7 +113,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Stockez une ressource nouvellement créée dans le stockage.
      */
     public function store(Request $request)
     {
@@ -73,14 +129,14 @@ class NoteController extends Controller
             'attachments.*.type' => 'required|string|max:255'
         ]);
 
-        // Create note
+        // Créer une note
         $note = Note::create([
             'title' => $request->title,
             'content_markdown' => $request->content_markdown,
             'user_id' => Auth::id()
         ]);
 
-        // Create tag
+        // Créer une balise
         if ($request->has('tag')) {
             $tag = Tag::create([
                 'name' => $request->tag,
@@ -93,7 +149,7 @@ class NoteController extends Controller
         }
         //dd($request->all());
 
-        // Create attachment
+        // Créer une pièce jointe
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
             $filename = $file->getClientOriginalName();
@@ -120,7 +176,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Afficher le formulaire pour modifier la ressource spécifiée.
      */
     public function edit(Note $note)
     {
@@ -129,11 +185,11 @@ class NoteController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mettre à jour la ressource spécifiée dans le stockage.
      */
     public function update(Request $request, Note $note, Tag $tag)
     {
-        // Edit note
+        // Modifier la note
         $note->update([
             'title' => $request->input('title'),
             'content_markdown' => $request->input('content_markdown'),
@@ -142,7 +198,7 @@ class NoteController extends Controller
 
         //dd($request->all());
 
-        if ($request->has('tag')) {
+        if ($request->has('tag') && !empty($request->input('tag'))) {
             $tag = Tag::create([
                 'name' => $request->input('tag'),
             ]);
@@ -153,7 +209,7 @@ class NoteController extends Controller
             ]);
         }
 
-        // Create attachment
+        // Créer une pièce jointe
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
             $filename = $file->getClientOriginalName();
@@ -170,11 +226,11 @@ class NoteController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprimez la ressource spécifiée du stockage.
      */
     public function destroy(Note $note)
     {
-        //
+        //supprimer la note
         $note->delete();
  
         return redirect()->route('notes.index');
