@@ -47,7 +47,6 @@ jobs:
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
           script: |
-            git pull
             cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
             php artisan migrate
             php artisan optimize:clear
