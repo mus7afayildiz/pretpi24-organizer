@@ -17,8 +17,8 @@ jobs:
       - name: Install dependencies
         run: npm install
   
-      - name: Vite Build
-        run: npm run vite:build
+      - name: Build project
+        run: npm run build
 
       - name: Deploy files to server using SCP
         uses: appleboy/scp-action@v0.1.4
@@ -42,7 +42,7 @@ jobs:
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
           script: |
-            echo git pull
-            echo cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
-            echo php artisan migrate
-            echo php artisan optimize:clear
+            git pull
+            cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
+            php artisan migrate
+            php artisan optimize:clear
