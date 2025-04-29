@@ -6,8 +6,6 @@
 /storage/*.key
 /storage/pail
 /vendor
-/bootstrap/cache
-/storage
 .env
 .env.backup
 .env.production

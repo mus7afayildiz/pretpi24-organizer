@@ -12,12 +12,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
-      #TODO vite build!!! (attention) OK!
-      - name: Clean node_modules and package-lock.json
-        run: |
-          rm -rf node_modules
-          rm package-lock.json
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
 
       - name: Install dependencies
         run: npm install
@@ -25,28 +22,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy files to server using SCP
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: organizer.w3.pm2etml.ch
-          username: mustafa-ssh
-          password: ${{ secrets.ORGANIZER_DEPLOY }}
-          port: 222
-          source: ./
-          target: htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
-          strip_components: 1
-          overwrite: true
-          command_timeout: 30m
-
-
-      - name: Set Correct Permissions & Restart Server
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: organizer.w3.pm2etml.ch
-          username: mustafa-ssh
-          password: ${{ secrets.ORGANIZER_DEPLOY }}
-          port: 222
-          script: |
-            cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
-            php artisan migrate
+      - name: Deploy to server with ssh + password
+        run: sshpass -p "${{ secrets.ORGANIZER_DEPLOY }}" ssh -o StrictHostKeyChecking=no -p 222 mustafa-ssh@organizer.w3.pm2etml.ch '
+            cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer &&
+            git pull origin main &&
+            composer install --no-dev --optimize-autoloader &&
+            php artisan migrate --force &&
             php artisan optimize:clear
+          '
