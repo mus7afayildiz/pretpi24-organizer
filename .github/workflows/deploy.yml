@@ -40,6 +40,6 @@ jobs:
         run: sshpass -p "${{ secrets.ORGANIZER_DEPLOY }}" ssh -o StrictHostKeyChecking=no -p 222 mustafa-ssh@organizer.w3.pm2etml.ch '
             cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer &&
             composer install --no-dev --optimize-autoloader &&
-            php artisan migrate --force &&
-            php artisan optimize:clear
+            php artisan optimize:clear &&
+            php artisan migrate --force
           '
