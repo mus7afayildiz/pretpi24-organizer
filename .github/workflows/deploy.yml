@@ -16,6 +16,11 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
+      - name: Clean node_modules and package-lock.json
+        run: |
+          rm -rf node_modules
+          rm package-lock.json
+          
       - name: Install dependencies
         run: npm install
   
