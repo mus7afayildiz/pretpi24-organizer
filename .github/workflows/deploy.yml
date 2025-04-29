@@ -28,11 +28,12 @@ jobs:
         run: npm run build
 
       - name: Sync project to server
-        run: sshpass -p "${{ secrets.ORGANIZER_DEPLOY }}" rsync -avz \
-            -e "ssh -p 222 -o StrictHostKeyChecking=no" \
-            --exclude "node_modules" \
-            --exclude ".env" \
-            ./ \
+        run: sshpass -p "${{ secrets.ORGANIZER_DEPLOY }}" rsync -avz 
+            -e "ssh -p 222 -o StrictHostKeyChecking=no" 
+            --exclude "node_modules"
+            --exclude ".git"  
+            --exclude ".env" 
+            ./ 
             mustafa-ssh@organizer.w3.pm2etml.ch:htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
 
       - name: Run Laravel commands
