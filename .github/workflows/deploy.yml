@@ -32,7 +32,7 @@ jobs:
           username: mustafa-ssh
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
-          source: "./public/build/"   # <-- important : le dossier des fichiers build (vite fait du dossier 'dist' le dossier par défaut)
+          source: "./public/build/cd"   # <-- important : le dossier des fichiers build (vite fait du dossier 'dist' le dossier par défaut)
           target: "htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer/build"
           strip_components: 1
           overwrite: true
@@ -47,6 +47,6 @@ jobs:
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
           script: |
-            cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer/build
+            cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
             php artisan migrate
             php artisan optimize:clear
