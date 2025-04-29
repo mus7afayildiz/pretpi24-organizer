@@ -32,17 +32,16 @@ jobs:
           username: mustafa-ssh
           password: ${{ secrets.ORGANIZER_DEPLOY }}
           port: 222
-          source: |
-            ./app
-            ./bootstrap
-            ./config
-            ./database
-            ./public
-            ./resources
-            ./routes
-            ./artisan
-            ./composer.json
-            ./composer.lock
+          source: ./app
+                  ./bootstrap
+                  ./config
+                  ./database
+                  ./public
+                  ./resources
+                  ./routes
+                  ./artisan
+                  ./composer.json
+                  ./composer.lock
           target: htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer
           strip_components: 1
           overwrite: true
