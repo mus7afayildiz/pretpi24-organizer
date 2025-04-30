@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -12,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all(); 
+        $categories = Tag::all(); 
  
         return view('categories.index', compact('categories'));
         //
@@ -32,7 +33,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        Category::create([
+        Tag::create([
             'name' => $request->input('name'),
         ]);
  
@@ -51,18 +52,18 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(Tag $category)
     {
         //
-        return view('categories.edit', compact('category'));
+        return view('categories.edit',  ['category' => $category]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Tag $category)
     {
-        //
+        //Modifier la balise
         $category->update([
             'name' => $request->input('name'),
         ]);
@@ -73,9 +74,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Tag $tag)
     {
-        $category->delete();
+        $tag->delete();
         return redirect()->route('categories.index');
         //
     }

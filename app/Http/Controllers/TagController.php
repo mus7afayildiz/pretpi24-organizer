@@ -28,7 +28,7 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag detached successfully', 200]);
     }
 
-    public function store(Note $note, Tag $tag)
+    public function store(Request $request, Note $note, Tag $tag)
     {
         // Créer une balise
         if ($request->has('tag')) {
@@ -44,13 +44,31 @@ class TagController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Tag $tag)
+    {
+        //
+        // $tag->update([
+        //     'name' => $request->input('name'),
+        // ]);
+
+        return redirect()->route('categories.index'); 
+    }
+
+    /**
      * Supprimez la ressource spécifiée du stockage.
      */
     public function destroy(Tag $tag)
     {
+        $tag = Tag::findOrFail($tag->tag_id);
+
+        \Log::info("La balise est supprimée : " . $tag->tag_id);
+
         //supprimer la balise
+        $tag->notes()->detach();
         $tag->delete();
-        return redirect()->route('notes.index');
+        return redirect()->route('categories.index');
     }
 
 
