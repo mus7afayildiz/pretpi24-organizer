@@ -129,7 +129,7 @@ class NoteController extends Controller
         ]);
 
         // Créer une balise
-        if ($request->has('tag')) {
+        if ($request->has('tag') && !empty($request->tag)) {
             $tag = Tag::create([
                 'name' => $request->tag,
             ]);
