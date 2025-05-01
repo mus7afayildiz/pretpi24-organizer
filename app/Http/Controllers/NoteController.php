@@ -60,24 +60,16 @@ class NoteController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
-
-        $query = Note::with(['tags', 'attachments'])->where('user_id', $user->id);
+        $notesQuery = Note::with(['tags', 'attachments'])->where('user_id', Auth::id());
 
         // Recherche par mot-clé
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
+            $notesQuery->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', "%{$searchTerm}%")
                 ->orWhere('content_markdown', 'like', "%{$searchTerm}%");
             });
         }
-
-        // Récupérer des notes et des balises
-        $notes = $query->with('tags', 'attachments')->get();
-        $tags = Tag::all(); // Obtenir des étiquettes
-
-        $notesQuery = Note::with(['tags', 'attachments'])->where('user_id', Auth::id());
 
         $tags = Tag::all(); // Pour les cases à cocher
         
