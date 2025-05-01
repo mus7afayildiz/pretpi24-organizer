@@ -41,5 +41,7 @@ jobs:
             cd htdocs/organizer.w3.pm2etml.ch/public/pretpi24-organizer &&
             composer install --no-dev --optimize-autoloader &&
             php artisan optimize:clear &&
-            php artisan migrate --force
+            php artisan migrate --force &&
+            chmod -R 775 storage bootstrap/cache &&
+            chown -R www-data:www-data storage bootstrap/cache
           '
