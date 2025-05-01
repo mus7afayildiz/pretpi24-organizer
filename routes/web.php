@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
     Route::delete('/tag/{tag}', [TagController::class, 'destroy'])->name('tag.destroy');
     Route::resource('categories', CategoryController::class);
+    Route::get('/attachments/view/{attachment}', [AttachmentController::class, 'view'])->name('attachments.view');
+
 });
 
 Route::get('/test-mail', function () {

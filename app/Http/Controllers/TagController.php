@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller
 {
-
     public function detach(Request $request, Tag $tag)
     {
         $noteId = $request->input('note_id');
@@ -48,10 +47,6 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        //
-        // $tag->update([
-        //     'name' => $request->input('name'),
-        // ]);
 
         return redirect()->route('categories.index'); 
     }
@@ -70,6 +65,4 @@ class TagController extends Controller
         $tag->delete();
         return redirect()->route('categories.index');
     }
-
-
 }

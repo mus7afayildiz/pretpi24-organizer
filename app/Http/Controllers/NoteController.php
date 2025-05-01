@@ -42,13 +42,13 @@ class NoteController extends Controller
 
     public function removeTagFromNote($noteId, $tagId)
     {
-        // Notu bul
+        // Trouver la note
         $note = Note::findOrFail($noteId);
 
-        // Tag'ı bul
+        // Trouver la balise
         $tag = Tag::findOrFail($tagId);
 
-        // Tag'ı not ile ilişkisinden kaldır
+        //Supprimer la balise de l'association avec la note
         $note->tags()->detach($tagId);
 
         return response()->json(['message' => 'Tag removed successfully.']);
@@ -64,37 +64,37 @@ class NoteController extends Controller
 
         $query = Note::with(['tags', 'attachments'])->where('user_id', $user->id);
 
-    // Recherche par mot-clé
-    if ($request->has('search') && $request->search != '') {
-        $searchTerm = $request->search;
-        $query->where(function ($q) use ($searchTerm) {
-            $q->where('title', 'like', "%{$searchTerm}%")
-            ->orWhere('content_markdown', 'like', "%{$searchTerm}%");
-        });
-    }
+        // Recherche par mot-clé
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                ->orWhere('content_markdown', 'like', "%{$searchTerm}%");
+            });
+        }
 
-    // Récupérer des notes et des balises
-    $notes = $query->with('tags', 'attachments')->get();
-    $tags = Tag::all(); // Obtenir des étiquettes
+        // Récupérer des notes et des balises
+        $notes = $query->with('tags', 'attachments')->get();
+        $tags = Tag::all(); // Obtenir des étiquettes
 
-    $notesQuery = Note::with(['tags', 'attachments'])->where('user_id', Auth::id());
+        $notesQuery = Note::with(['tags', 'attachments'])->where('user_id', Auth::id());
 
-    $tags = Tag::all(); // Pour les cases à cocher
-    
-    // Obtenir les cases à cocher sous forme de tableau
-    if ($request->has('tags')) {
-        $selectedTags = $request->input('tags', []);
-    
-        $notesQuery->whereHas('tags', function ($query) use ($selectedTags) {
-            $query->whereIn('name', $selectedTags);
-        });
-    } else {
-        $selectedTags = [];
-    }
-    
-    $notes = $notesQuery->get();
-    
-    return view('notes.index', compact('notes', 'tags', 'selectedTags'));
+        $tags = Tag::all(); // Pour les cases à cocher
+        
+        // Obtenir les cases à cocher sous forme de tableau
+        if ($request->has('tags')) {
+            $selectedTags = $request->input('tags', []);
+        
+            $notesQuery->whereHas('tags', function ($query) use ($selectedTags) {
+                $query->whereIn('name', $selectedTags);
+            });
+        } else {
+            $selectedTags = [];
+        }
+        
+        $notes = $notesQuery->get();
+        
+        return view('notes.index', compact('notes', 'tags', 'selectedTags'));
     }
 
     public function showIndexPage()
@@ -147,7 +147,6 @@ class NoteController extends Controller
                 'tag_id' => $tag->tag_id, 
             ]);
         }
-        //dd($request->all());
 
         // Créer une pièce jointe
         if ($request->hasFile('attachment')) {
@@ -195,8 +194,6 @@ class NoteController extends Controller
             'content_markdown' => $request->input('content_markdown'),
             'user_id' => Auth::id()
         ]);
-
-        //dd($request->all());
 
         if ($request->has('tag') && !empty($request->input('tag'))) {
             $tag = Tag::create([

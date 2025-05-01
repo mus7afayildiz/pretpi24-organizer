@@ -32,7 +32,7 @@ class AttachmentController extends Controller
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
             $filename = $file->getClientOriginalName();
-            $path = $file->store('attachments');
+            $path = $file->store('attachments', 'public');
     
             // Ajouter des pièces jointes
             Attachment::create([
@@ -62,6 +62,23 @@ class AttachmentController extends Controller
         return response()->json(['message' => 'Attachment removed successfully.']);
     }
 
+
+    public function view($id)
+    {
+        $attachment = Attachment::findOrFail($id);
+        $path = 'public/attachments/'.$attachment->path;
+
+        if (!Storage::exists($path)) {
+            abort(404);
+            "test";
+        }
+
+        if (auth()->id() !== $attachment->note->user_id) {
+            abort(403); // Forbidden
+        }
+        dd($path, Storage::exists($path));
+        return response()->file(storage_path('app/' . $path));
+    }
 
 
     public function destroy(Attachment $attachment, Note $note)

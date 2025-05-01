@@ -112,7 +112,7 @@
                                         <td class="px-6 py-4 border-b border-r border-gray-300 dark:border-gray-600 text-sm space-y-3">
                                             @foreach($note->attachments as $attachment)
                                                 <div class="flex items-center justify-between">
-                                                    <a href="{{ asset($attachment->path) }}" target="_blank" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 transition">{{ $attachment->filename }}</a><br>
+                                                    <a href="{{ asset('storage/' . $attachment->path) }}" target="_blank" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 transition">{{ $attachment->filename }}</a><br>
                                                     <form action="{{ route('attachments.destroy', $attachment->attachment_id) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
