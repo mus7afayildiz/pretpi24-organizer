@@ -1,3 +1,5 @@
+@php use Milon\Barcode\DNS1D; @endphp
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -25,6 +27,7 @@
                                 <tr class="bg-gray-100 dark:bg-gray-700 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                     <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Titre</th>
                                     <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Text</th>
+                                    <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Barcode</th>
                                     <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Tag</th>
                                     <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Add Tag</th>
                                     <th class="px-6 py-3 border border-gray-300 dark:border-gray-600">Attachment</th>
@@ -79,6 +82,19 @@
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-900 dark:text-white">{{ $note->title }}</td>
                                         <!-- Content -->
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-400">{{ Str::limit($note->content_markdown, 50) }}</td>
+                                        <td class="px-6 py-4 border-b border-r border-gray-300 dark:border-gray-600 text-sm space-y-3">
+                                        @php
+                                            $barcode = new \Milon\Barcode\DNS1D();
+                                        @endphp
+                                        {!! $barcode->getBarcodeHTML((string)$note->note_id, 'C128', 2.5, 50) !!}
+                                        <p class="text-xs mt-1 text-center">{{ $note->note_id }}</p>
+                                        </td>
+
+                                        <td class="px-6 py-4 border-b border-r border-gray-300 dark:border-gray-600 text-sm space-y-3">
+                                            @foreach ($note->tags as $tag)
+                                                <span class="badge bg-secondary">{{ $tag->name }}</span>
+                                            @endforeach
+                                        </td>                                       
                                         <!-- Tags -->
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm space-y-3">
                                             @foreach($note->tags->unique('name') as $tag)
