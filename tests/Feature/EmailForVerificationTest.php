@@ -29,11 +29,11 @@ class EmailForVerificationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        // Kullanıcı kayıt olduktan sonra doğrulama bildirimi almalı
+        // Après l'inscription, l'utilisateur devrait recevoir une notification de vérification
         $user = User::where('email', 'test@example.com')->first();
         Notification::assertSentTo($user, VerifyEmail::class);
 
-        // Doğrulama bekleme ekranına yönlendirilmeli
+        // Vous devriez être dirigé vers l'écran d'attente de vérification
         $response->assertRedirect('/dashboard');
     }
 
@@ -47,14 +47,14 @@ class EmailForVerificationTest extends TestCase
             Carbon::now()->addMinutes(60),
             [
                 'id' => $user->getKey(),
-                'hash' => sha1('invalid@example.com'), // yanlış hash
+                'hash' => sha1('invalid@example.com'), // hachage erroné
             ]
         );
 
         $response = $this->actingAs($user)->get($invalidVerificationUrl);
 
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
-        $response->assertStatus(403); // veya hata sayfası yönlendirmesi
+        $response->assertStatus(403); // ou redirection de page d'erreur
     }
 
     #[Test]

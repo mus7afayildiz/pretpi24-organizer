@@ -50,7 +50,7 @@
             @endif
         </header>
         <body>
-            <h1>Laravel'e Hoş Geldiniz!</h1>
+            <h1>Welcome to Organizer!</h1>
         </body>
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] items-center justify-centerw-full flex-col-reverse lg:max-w-4xl lg:flex-row">
