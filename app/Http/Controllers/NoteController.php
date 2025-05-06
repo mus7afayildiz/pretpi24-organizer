@@ -128,8 +128,8 @@ class NoteController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        // 2. Barcode verisini üret (örneğin: UUID, ID, veya özel bir format)
-        $barcodeData = 'NOTE' . str_pad($note->note_id, 6, '0', STR_PAD_LEFT); // Örnek: NOTE000123
+        // Générer des données de code-barres (par exemple : UUID, ID ou format personnalisé)
+        $barcodeData = 'NOTE' . str_pad($note->note_id, 6, '0', STR_PAD_LEFT); // Ex: NOTE000123
         $note->barcode = $barcodeData;
         $note->save();
 
@@ -144,11 +144,6 @@ class NoteController extends Controller
                 'tag_id' => $tag->tag_id, 
             ]);
         }
-
-        // 2. Barcode verisini üret (örneğin: UUID, ID, veya özel bir format)
-        $barcodeData = 'NOTE' . str_pad($note->note_id, 6, '0', STR_PAD_LEFT); // Örnek: NOTE000123
-        $note->barcode = $barcodeData;
-        $note->save();
 
         // Créer une pièce jointe
         if ($request->hasFile('attachment')) {

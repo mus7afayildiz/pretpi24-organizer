@@ -20,7 +20,9 @@ return new class extends Migration
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->foreignIdFor(\App\Models\User::class,'user_id')->constrained('users')->onDelete('cascade');
             $table->index('title');
-            $table->fullText('content_markdown');
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                
+            }
         });
 
         // Table pivot Note <-> Tag

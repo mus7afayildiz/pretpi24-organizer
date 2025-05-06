@@ -82,19 +82,14 @@
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-900 dark:text-white">{{ $note->title }}</td>
                                         <!-- Content -->
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-400">{{ Str::limit($note->content_markdown, 50) }}</td>
+                                        <!-- Barcode -->
                                         <td class="px-6 py-4 border-b border-r border-gray-300 dark:border-gray-600 text-sm space-y-3">
                                         @php
                                             $barcode = new \Milon\Barcode\DNS1D();
                                         @endphp
                                         {!! $barcode->getBarcodeHTML((string)$note->note_id, 'C128', 2.5, 50) !!}
                                         <p class="text-xs mt-1 text-center">{{ $note->note_id }}</p>
-                                        </td>
-
-                                        <td class="px-6 py-4 border-b border-r border-gray-300 dark:border-gray-600 text-sm space-y-3">
-                                            @foreach ($note->tags as $tag)
-                                                <span class="badge bg-secondary">{{ $tag->name }}</span>
-                                            @endforeach
-                                        </td>                                       
+                                        </td>                                      
                                         <!-- Tags -->
                                         <td class="px-6 py-4 border border-gray-300 dark:border-gray-600 text-sm space-y-3">
                                             @foreach($note->tags->unique('name') as $tag)
